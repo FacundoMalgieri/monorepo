@@ -1,1 +1,6 @@
-{  "include": [    "packages/**/*",    "**/.eslintrc.js",  ]}
+{
+  "include": [
+    "packages/**/*",
+    "**/.eslintrc.js",
+  ]
+}
