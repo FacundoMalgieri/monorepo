@@ -8,8 +8,11 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "yarn workspace backend start & yarn workspace frontend start",
     "start:backend": "yarn workspace backend start",
-    "start:frontend": "yarn workspace frontend start"
+    "start:frontend": "yarn workspace frontend start",
+    "lint": "yarn workspaces run lint",
+    "test": "yarn workspace backend test && yarn workspace frontend test"
   },
   "packages": {
     "backend": {

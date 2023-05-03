@@ -5,6 +5,11 @@ module.exports = {
     browser: true,
     es6: true,
   },
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: ["./tsconfig.json"],
