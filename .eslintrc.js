@@ -6,6 +6,12 @@ module.exports = {
     es6: true,
   },
   settings: {
+    "import/resolver": {
+      node: {
+        paths: ["src"],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
     react: {
       version: "detect",
     },
@@ -19,7 +25,13 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ["@typescript-eslint", "import", "react", "react-hooks"],
+  plugins: [
+    "@typescript-eslint",
+    "import",
+    "react",
+    "react-hooks",
+    "no-relative-import-paths",
+  ],
   extends: [
     "eslint:recommended",
     "plugin:import/errors",
@@ -46,6 +58,10 @@ module.exports = {
       },
     ],
     "import/no-unresolved": 2,
+    "no-relative-import-paths/no-relative-import-paths": [
+      "error",
+      { allowSameFolder: true, rootDir: "src" },
+    ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-var-requires": "off",
