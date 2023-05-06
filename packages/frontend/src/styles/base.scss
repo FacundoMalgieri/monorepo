@@ -12,23 +12,21 @@ $borderRadius: 0.25rem;
 $borderWidth: 0.125rem;
 $boxShadow: 0 6px 6px rgba(0, 0, 0, 0.2);
 
-html,
-body,
-#root {
-  border: 0;
-  padding: 0;
+html, body {
   height: 100%;
-  width: 100%;
-  background-color: $white;
-  display: flex;
-}
-
-html {
-  box-sizing: border-box;
 }
 
 body {
-  font-size: 1rem;
   margin: 0;
-  font-family: $font-family-default;
+  padding: 0;
+  font-size: 1rem;
+}
+
+#root {
+  background-color: $white;
+  min-height: 100%;
+}
+
+p {
+  margin: 0
 }

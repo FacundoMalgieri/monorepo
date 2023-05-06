@@ -4,7 +4,6 @@ import Wallet from "components/Wallet";
 import useWallet from "hooks/useWallet";
 
 import styles from "./WalletList.module.scss";
-import { wallets } from "./WalletList.constants";
 
 const WalletList = () => {
   const { data, error, isLoading } = useWallet();
@@ -23,7 +22,7 @@ const WalletList = () => {
         <Wallet
           wallet={wallet}
           key={wallet.id}
-          separator={index < wallets.length - 1}
+          separator={index < data.length - 1}
         />
       ))}
     </div>

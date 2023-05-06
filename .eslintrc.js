@@ -17,14 +17,6 @@ module.exports = {
     },
   },
   parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: ["./tsconfig.json"],
-    ecmaVersion: 2018,
-    sourceType: "module",
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
   plugins: [
     "@typescript-eslint",
     "import",
@@ -67,5 +59,6 @@ module.exports = {
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/ban-types": "off",
     "react/display-name": "off",
+    "no-console": "warn",
   },
 };
