@@ -5,8 +5,3 @@ export interface WalletEntity {
   old: boolean;
   balance: number;
 }
-
-export type WalletProps = {
-  wallet: WalletEntity;
-  separator?: boolean;
-};

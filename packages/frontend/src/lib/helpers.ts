@@ -3,5 +3,5 @@ export const urlHelper = (
   param: string | number,
   queryString = ""
 ): string => {
-  return `/${path}/${param}${queryString}`;
+  return `${path}/${param}${queryString}`;
 };

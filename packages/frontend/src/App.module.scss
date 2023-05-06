@@ -1,0 +1,19 @@
+@import "styles/base";
+
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: $maxWidth;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+
+  @media (max-width: $tablet-portrait) {
+    padding: 1rem;
+  }
+
+  @media (max-width: $mobile) {
+    padding: 0.125rem;
+  }
+}

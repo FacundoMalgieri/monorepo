@@ -6,18 +6,21 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { Wallet } from './wallet.entity';
 import { WalletService } from './wallet.service';
+
+export type SortType = 'FAV' | 'ASC' | 'DSC';
 
 @Controller('wallets')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Get()
-  async findAll(): Promise<Wallet[]> {
-    return this.walletService.findAll();
+  async findAll(@Query('sort') sort: SortType): Promise<Wallet[]> {
+    return this.walletService.findAll(sort);
   }
 
   @Post()

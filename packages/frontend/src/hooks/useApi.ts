@@ -1,60 +1,44 @@
-import { useState, useEffect } from "react";
-import { AxiosRequestConfig, AxiosResponse, AxiosError, Method } from "axios";
+import { useCallback, useState } from "react";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import NProgress from "nprogress";
 
 import axios from "lib/axios";
 
-interface UseHttpRequestProps<T> {
-  url: string;
-  method: Method;
-  headers?: AxiosRequestConfig["headers"];
-  body?: AxiosRequestConfig["data"];
-  initialData?: T;
-}
-
 interface UseHttpRequestReturn<T> {
-  data?: T;
-  error?: string;
+  sendRequest: (requestConfig: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
   isLoading: boolean;
-  sendRequest: (data?: AxiosRequestConfig["data"]) => Promise<void>;
+  error?: string;
 }
 
-const useApi = <T>({
-  url,
-  method,
-  headers,
-  body,
-  initialData,
-}: UseHttpRequestProps<T>): UseHttpRequestReturn<T> => {
-  const [data, setData] = useState<T | undefined>(initialData);
-  const [error, setError] = useState<string | undefined>(undefined);
+const useApi = <T>(): UseHttpRequestReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
-  const sendRequest = async (requestData?: AxiosRequestConfig["data"]) => {
-    try {
-      setIsLoading(true);
+  const sendRequest = useCallback(
+    async (requestConfig: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
+      try {
+        setIsLoading(true);
+        NProgress.start();
 
-      const response: AxiosResponse<T> = await axios({
-        url,
-        method,
-        headers,
-        data: requestData || body,
-      });
+        const response: AxiosResponse<T> = await axios(requestConfig);
 
-      setData(response.data);
-      setError(undefined);
-    } catch (error) {
-      setError((error as AxiosError<T>).message || "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setIsLoading(false);
+        NProgress.done();
 
-  useEffect(() => {
-    sendRequest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+        return response;
+      } catch (error) {
+        const err = error as AxiosError<T>;
+        setIsLoading(false);
+        setError(err.message);
+        throw err.message || "An error occurred";
+      } finally {
+        NProgress.done();
+      }
+    },
+    []
+  );
 
-  return { data, error, isLoading, sendRequest };
+  return { sendRequest, isLoading, error };
 };
 
 export default useApi;
