@@ -1,19 +1,22 @@
-FROM node:18.12.1
+FROM node:18 AS builder
+ENV NODE_ENV=development
 
-WORKDIR /app/packages/frontend
+WORKDIR /app
 
-COPY package*.json ./
+COPY ./packages/frontend .
+COPY ./yarn.lock .
 
 RUN yarn install
+RUN yarn run build
 
-COPY . .
+FROM nginx:1.23.3-alpine
 
-RUN yarn global add serve
+WORKDIR /app
 
-COPY ../../.eslintrc.js /app
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/yarn.lock ./
+COPY --from=builder /app/build ./build
 
-RUN yarn build
+EXPOSE 80
 
-WORKDIR /app/packages/frontend/build
-
-CMD serve -p 3000 -s .
+CMD ["nginx", "-g", "daemon off;"]

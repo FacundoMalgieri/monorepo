@@ -1,0 +1,14 @@
+.idea
+.github
+**/node_modules
+**/dist
+**/.env
+**/.eslintrc.js
+**/.prettierrc
+**/.gitignore
+**/README.md
+**/test
+**/.DS_Store
+**/build
+
+
