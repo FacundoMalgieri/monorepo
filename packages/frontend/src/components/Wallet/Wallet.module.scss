@@ -26,7 +26,9 @@
   letter-spacing: .05rem;
 
   @media (max-width: $mobile) {
+    padding: .5rem;
     font-size: .85rem;
+    letter-spacing: unset;
   }
 }
 
@@ -55,14 +57,21 @@
   &:first-child {
     margin-right: 1.5rem;
   }
+
+  @media (max-width: $mobile) {
+    font-size: .85rem;
+    flex-direction: column;
+    padding: .5rem;
+    height: 5rem;
+    max-width: 48%;
+
+    &:first-child {
+      margin-right: .75rem;
+    }
+  }
 }
 
-.selectContainer {
-  display: flex;
-  align-items: center;
-}
-
-.currency{
+.currency {
   color: $green
 }
 
@@ -78,8 +87,92 @@
   margin-bottom: 1rem;
   padding: 1rem;
   color: $burgundy;
+
+  @media (max-width: $mobile) {
+    font-size: .85rem;
+    padding: .5rem;
+  }
 }
 
 .favIcon {
+  cursor: pointer;
   margin-left: auto;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  @media (max-width: $mobile) {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+.editContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: flex-end;
+
+  @media (max-width: $mobile) {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
+    height: unset;
+    align-items: center;
+  }
+}
+
+.iconsContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: .5rem;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    color: $red;
+    cursor: pointer;
+
+    &:last-child {
+      margin-left: 1.5rem;
+      color: $green;
+    }
+
+    path:nth-child(2) {
+      stroke-width: 2px !important;
+    }
+  }
+
+  @media (max-width: $mobile) {
+    margin-bottom: 0;
+  }
+}
+
+.rateInput {
+  border-radius: $borderRadius;
+  border: 0;
+  font-size: 1.2rem;
+  max-width: 40%;
+
+  @media (max-width: $mobile) {
+    max-width: 40%;
+    padding: .25rem;
+    font-size: .85rem;
+  }
+}
+
+.rateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  @media (max-width: $mobile) {
+    flex-direction: row-reverse;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.editIcon {
+  color: $lightBlue !important;
+  margin-bottom: .5rem;
 }

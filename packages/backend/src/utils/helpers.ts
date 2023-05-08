@@ -16,7 +16,7 @@ export const findAndWeiToEth = (accounts: BalanceResponse[], address) =>
       10 ** 18
     : 0;
 
-export const sortBy = (sort: string): Record<string, SortType> => {
+export const sortBy = (sort: SortType): Record<string, SortType> => {
   let orderBy;
 
   if (sort === 'ASC') {
@@ -33,6 +33,12 @@ export const sortBy = (sort: string): Record<string, SortType> => {
 export const getWalletAddresses = (wallets: Wallet[]): string =>
   wallets.map((wallet) => wallet.address).join(',');
 
-// wait 1 sec to avoid reaching max limit of the free API
-export const avoidMaxLimitPerSecond = async (): Promise<void> =>
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+export const isOlderThanOneYear = (timestamp: number): boolean => {
+  if (timestamp !== 0) {
+    const oneYearAgo = new Date();
+    const date = new Date(timestamp * 1000);
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    return date < oneYearAgo;
+  }
+  return false;
+};

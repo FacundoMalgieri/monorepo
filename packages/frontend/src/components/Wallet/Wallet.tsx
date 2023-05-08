@@ -1,5 +1,11 @@
 import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
-import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
+import {
+  MdBookmark,
+  MdBookmarkBorder,
+  MdCheck,
+  MdClose,
+  MdEditSquare,
+} from "react-icons/md";
 
 import Separator from "components/Separator";
 import { WalletEntity } from "lib/constants/types.constants";
@@ -24,6 +30,7 @@ const Wallet: FC<WalletProps> = ({
   separator = false,
 }) => {
   const [isFav, setIsFav] = useState(favorite);
+  const [isEdit, setIsEdit] = useState(false);
   const [currency, setCurrency] = useState<string>(
     localStorage.getItem(defaultCurrency) || "usd"
   );
@@ -41,42 +48,62 @@ const Wallet: FC<WalletProps> = ({
     localStorage.setItem(defaultCurrency, value);
   };
 
-  const selectOptions = useMemo(
-    () => [
-      {
-        label: "USD",
-        value: "usd",
-      },
-      {
-        label: "EUR",
-        value: "eur",
-      },
-    ],
-    []
+  const onSetEdit = () => setIsEdit(!isEdit);
+
+  // const onRateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  // };
+
+  const isUsd = useMemo(() => currency === "usd", [currency]);
+
+  const currentBalanceInFiat = useMemo(
+    () =>
+      isUsd
+        ? `$ ${(usd * eth).toLocaleString()}`
+        : `€ ${(eur * eth).toLocaleString()}`,
+    [currency]
+  );
+
+  const formattedRate = useMemo(
+    () => (isUsd ? `$ ${usd.toLocaleString()}` : `€ ${eur.toLocaleString()}`),
+    [currency]
   );
 
   const renderFavIcons = useMemo(
     () =>
       isFav ? (
-        <MdOutlineFavorite
+        <MdBookmarkBorder
           onClick={onMarkAsFavorite}
           className={styles.favIcon}
         />
       ) : (
-        <MdFavoriteBorder
-          onClick={onMarkAsFavorite}
-          className={styles.favIcon}
-        />
+        <MdBookmark onClick={onMarkAsFavorite} className={styles.favIcon} />
       ),
     [isFav]
   );
 
-  const currentBalanceInFiat = useMemo(
+  const renderEditMode = useMemo(
     () =>
-      currency === "usd"
-        ? `$ ${(usd * eth).toLocaleString()}`
-        : `€ ${(eur * eth).toLocaleString()}`,
-    [currency]
+      isEdit ? (
+        <div className={styles.editContainer}>
+          <div className={styles.iconsContainer}>
+            <MdClose onClick={onSetEdit} />
+            <MdCheck />
+          </div>
+          <input
+            className={styles.rateInput}
+            type="text"
+            value={isUsd ? usd : eur}
+          />
+        </div>
+      ) : (
+        <div className={styles.rateContainer}>
+          <MdEditSquare onClick={onSetEdit} className={styles.editIcon} />
+          <p>
+            <b>Rate:</b> {formattedRate}
+          </p>
+        </div>
+      ),
+    [isEdit]
   );
 
   return (
@@ -87,17 +114,13 @@ const Wallet: FC<WalletProps> = ({
         {renderFavIcons}
       </div>
       <div className={styles.boxes}>
-        <div className={styles.box}>{usd.toLocaleString("en-US")}</div>
         <div className={styles.box}>
-          <p>{eth.toLocaleString("en-US")} ETH</p>
-          <div className={styles.selectContainer}>
-            <Select
-              selected={currency}
-              onChange={onSelectCurrency}
-              elements={selectOptions}
-            />
-            <p className={styles.currency}>{currentBalanceInFiat}</p>
-          </div>
+          <b>{eth.toLocaleString("en-US")} ETH</b>
+          {renderEditMode}
+        </div>
+        <div className={styles.box}>
+          <Select selected={currency} onChange={onSelectCurrency} />
+          <p className={styles.currency}>{currentBalanceInFiat}</p>
         </div>
       </div>
       {separator && <Separator />}

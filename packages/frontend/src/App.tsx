@@ -6,7 +6,7 @@ import "nprogress/nprogress.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import useWallet from "./hooks/useWallet";
-import SortRadioButtons from "./components/SortRadioButtons";
+import RadioButtons from "./components/RadioButtons";
 import Separator from "./components/Separator";
 import WalletList from "./components/WalletList";
 import AddWallet from "./components/AddWallet";
@@ -43,7 +43,7 @@ const App: FC = () => {
         theme="light"
       />
       <AddWallet createWallet={createWallet} />
-      <SortRadioButtons onSortChange={onSetSortBy} sortBy={sortBy} />
+      <RadioButtons onSortChange={onSetSortBy} sortBy={sortBy} />
       <Separator />
       <WalletList wallets={data} updateWallet={updateWallet} />
     </div>

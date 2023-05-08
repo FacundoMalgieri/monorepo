@@ -40,6 +40,11 @@ p {
   height: 4px !important;
 }
 
+#nprogress .spinner {
+  left: 15px !important;
+  right: unset !important;
+}
+
 #nprogress .spinner-icon {
   width: 24px !important;
   height: 24px !important;

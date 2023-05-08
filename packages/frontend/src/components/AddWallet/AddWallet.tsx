@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { ChangeEventHandler, FC, useState } from "react";
 import classNames from "classnames";
 import { MdSearch } from "react-icons/md";
 
@@ -14,7 +14,7 @@ const AddWallet: FC<AddWalletProps> = ({ createWallet }) => {
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const inputValue = event.target.value;
     setAddress(inputValue);
   };

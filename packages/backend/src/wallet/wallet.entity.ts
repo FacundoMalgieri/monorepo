@@ -5,7 +5,7 @@ export class Wallet {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 42 })
   address: string;
 
   @Column({ default: false })

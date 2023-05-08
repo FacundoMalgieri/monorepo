@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { getETHBalance } from 'api/etherscan';
+import { getETHBalance, getFirstTxTimestamp } from 'api/etherscan';
 import { RateService } from 'rate/rate.service';
 import {
-  avoidMaxLimitPerSecond,
   findAndWeiToEth,
   getWalletAddresses,
+  isOlderThanOneYear,
   isValidETHAddress,
   sanitizeAddresses,
   sortBy,
@@ -36,15 +36,18 @@ export class WalletService {
     const balanceResult = await getETHBalance(walletAddresses);
 
     const extendedWallets = wallets?.map(async (wallet) => {
-      const rates = await this.rateService.findRate(wallet.address);
-      const eth = findAndWeiToEth(balanceResult, wallet.address);
+      const { address } = wallet;
+      const rates = await this.rateService.findRate(address);
+      const timestamp = await getFirstTxTimestamp(address);
+      const old = isOlderThanOneYear(timestamp);
+      const eth = findAndWeiToEth(balanceResult, address);
 
       return {
         ...wallet,
         eth,
         usd: rates.usd,
         eur: rates.eur,
-        old: false,
+        old,
       };
     });
 
@@ -57,7 +60,6 @@ export class WalletService {
       return [];
     }
 
-    await avoidMaxLimitPerSecond();
     return this.extendWallets(sanitizeAddresses(wallets));
   }
 
