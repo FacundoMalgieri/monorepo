@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import Wallet from "components/Wallet";
-import { WalletEntity } from "components/Wallet/Wallet.constants";
+import { WalletEntity } from "lib/constants/types.constants";
 
 import styles from "./WalletList.module.scss";
 

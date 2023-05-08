@@ -14,11 +14,11 @@ import { WalletService } from './wallet.service';
 
 export type SortType = 'FAV' | 'ASC' | 'DSC';
 
-@Controller('wallets')
+@Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
-  @Get()
+  @Get('/all')
   async findAll(@Query('sort') sort: SortType): Promise<Wallet[]> {
     return this.walletService.findAll(sort);
   }

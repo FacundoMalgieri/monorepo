@@ -3,11 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { WalletModule } from './wallet/wallet.module';
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     WalletModule,
+    RateModule,
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as 'postgres',
       host: process.env.PG_HOST,

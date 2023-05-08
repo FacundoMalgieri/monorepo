@@ -1,1 +1,56 @@
-@import "styles/base";.address {  display: flex;  align-items: center;  justify-content: center;  border: $borderWidth solid $lightGrey;  max-width: $maxWidth;  background-color: $grey;  border-radius: $borderRadius;  box-sizing: border-box;  box-shadow: $boxShadow;  width: 100%;  margin-bottom: 1rem;  padding: 1rem;  font-size: 1.5rem;  font-weight: 500;  letter-spacing: .05rem;}
+@import "styles/base";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-width: $maxWidth;
+  width: 100%;
+  position: relative;
+  margin-bottom: .5rem;
+
+  &:first-child {
+    margin-bottom: 1rem;
+  }
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: $borderWidth solid $lightGrey;
+  background-color: $grey;
+  border-radius: $borderRadius;
+  box-sizing: border-box;
+  box-shadow: $boxShadow;
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: .05rem;
+
+  @media (max-width: $mobile) {
+    font-size: .85rem;
+  }
+}
+
+.searchIcon {
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: auto 0;
+}
+
+.errorInput {
+  border: $borderWidth solid $red;
+  box-shadow: $boxShadowError;
+}
+
+.error {
+  color: $red;
+}

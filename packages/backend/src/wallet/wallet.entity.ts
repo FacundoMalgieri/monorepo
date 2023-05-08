@@ -11,9 +11,6 @@ export class Wallet {
   @Column({ default: false })
   favorite: boolean;
 
-  @Column({ default: false })
-  old: boolean;
-
   @Column({ type: 'float8', default: 0 })
-  balance: number;
+  eth: number;
 }

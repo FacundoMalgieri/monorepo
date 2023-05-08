@@ -1,7 +1,10 @@
 import React, { FC, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 
 import "styles/base.scss";
 import "nprogress/nprogress.css";
+import "react-toastify/dist/ReactToastify.css";
+
 import useWallet from "./hooks/useWallet";
 import SortRadioButtons from "./components/SortRadioButtons";
 import Separator from "./components/Separator";
@@ -12,19 +15,36 @@ import styles from "./App.module.scss";
 export type SortType = "FAV" | "ASC" | "DSC";
 
 const App: FC = () => {
-  const { data, sortBy, setSortBy, getAllWallets, createWallet, updateWallet } =
-    useWallet();
+  const {
+    data,
+    sortBy,
+    onSetSortBy,
+    getAllWallets,
+    createWallet,
+    updateWallet,
+  } = useWallet();
 
   useEffect(() => {
     getAllWallets();
-  }, [getAllWallets]);
+  }, [sortBy]);
 
   return (
     <div className={styles.appContainer}>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <AddWallet createWallet={createWallet} />
-      <SortRadioButtons onSortChange={setSortBy} sortBy={sortBy} />
+      <SortRadioButtons onSortChange={onSetSortBy} sortBy={sortBy} />
       <Separator />
-      <h2>Wallets List</h2>
       <WalletList wallets={data} updateWallet={updateWallet} />
     </div>
   );

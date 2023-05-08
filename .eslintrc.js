@@ -60,5 +60,6 @@ module.exports = {
     "@typescript-eslint/ban-types": "off",
     "react/display-name": "off",
     "no-console": "warn",
+    "react-hooks/exhaustive-deps": "off",
   },
 };

@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { useState } from "react";
 
-import { WalletEntity } from "components/Wallet/Wallet.constants";
+import { WalletEntity } from "lib/constants/types.constants";
 import HTTP from "lib/constants/http.enum";
 import { urlHelper } from "lib/helpers";
-import { WALLETS_URL } from "lib/constants/routes.constants";
+import { WALLET_URL } from "lib/constants/routes.constants";
 import { SortType } from "App";
 
 import useApi from "./useApi";
@@ -13,7 +13,7 @@ interface UseWalletReturn {
   error?: string;
   isLoading: boolean;
   sortBy: SortType;
-  setSortBy: Dispatch<SetStateAction<SortType>>;
+  onSetSortBy: (value: SortType) => void;
   getAllWallets: () => Promise<void>;
   createWallet: (address: string) => Promise<void>;
   updateWallet: (
@@ -34,24 +34,24 @@ const useWallet = (): UseWalletReturn => {
     localStorage.getItem(lsKey) as SortType
   );
 
-  const onSetSortBy = useCallback((value: SortType) => {
+  const onSetSortBy = (value: SortType) => {
     setSortBy(value);
     localStorage.setItem(lsKey, value);
-  }, []);
+  };
 
-  const getAllWallets = useCallback(async () => {
+  const getAllWallets = async () => {
     const response = await sendRequest({
-      url: WALLETS_URL,
+      url: urlHelper(WALLET_URL, "all"),
       method: HTTP.GET,
       params: { sort: sortBy },
     });
     setData(response.data as WalletEntity[]);
     onSetSortBy(sortBy || "DSC");
-  }, [sendRequest, sortBy, onSetSortBy]);
+  };
 
   const createWallet = async (address: string) => {
     await sendRequest({
-      url: WALLETS_URL,
+      url: WALLET_URL,
       method: HTTP.POST,
       data: { address },
     });
@@ -63,7 +63,7 @@ const useWallet = (): UseWalletReturn => {
     wallet: Partial<WalletEntity>
   ): Promise<WalletEntity> => {
     const res = await sendRequest({
-      url: urlHelper(WALLETS_URL, id),
+      url: urlHelper(WALLET_URL, id),
       method: HTTP.PATCH,
       data: { ...wallet },
     });
@@ -72,7 +72,7 @@ const useWallet = (): UseWalletReturn => {
 
   const deleteWallet = async (id: number) => {
     await sendRequest({
-      url: urlHelper(WALLETS_URL, id),
+      url: urlHelper(WALLET_URL, id),
       method: HTTP.DELETE,
     });
   };
@@ -83,7 +83,7 @@ const useWallet = (): UseWalletReturn => {
     error,
     getAllWallets,
     sortBy,
-    setSortBy,
+    onSetSortBy,
     createWallet,
     updateWallet,
     deleteWallet,

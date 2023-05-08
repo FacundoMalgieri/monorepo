@@ -10,8 +10,9 @@ $mobile: 640px;
 
 $maxWidth: 61.5rem;
 $borderRadius: 0.25rem;
-$borderWidth: 0.125rem;
+$borderWidth: 0.075rem;
 $boxShadow: 0 6px 6px rgba(0, 0, 0, 0.2);
+$boxShadowError: 0 0 1rem rgba(239, 2, 2, 0.2);
 
 html, body {
   height: 100%;

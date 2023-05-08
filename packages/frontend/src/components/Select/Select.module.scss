@@ -1,1 +1,8 @@
-.select {}
+@import "styles/base";
+
+.select {
+  border-radius: $borderRadius;
+  border: $borderWidth solid $lightGrey;
+  padding: .5rem;
+  min-width: 3rem;
+}
