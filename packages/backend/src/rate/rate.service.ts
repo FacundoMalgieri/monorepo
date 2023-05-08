@@ -25,7 +25,18 @@ export class RateService {
   }
 
   async update(rateData?: Partial<Rate>): Promise<Rate> {
-    await this.rateRepository.update({ address: rateData.address }, rateData);
+    let payload = { ...rateData };
+
+    if (rateData.eur === 0 || rateData.usd === 0) {
+      const coinGeckoRates = await getETHRate();
+      const defaultRate =
+        rateData.eur === 0
+          ? { eur: coinGeckoRates.eur }
+          : { usd: coinGeckoRates.usd };
+      payload = { ...rateData, ...defaultRate };
+    }
+
+    await this.rateRepository.update({ address: rateData.address }, payload);
     return await this.rateRepository.findOne({
       where: { address: rateData.address },
     });

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { WalletEntity } from "lib/constants/types.constants";
 import HTTP from "lib/constants/http.enum";
-import { urlHelper } from "lib/helpers";
+import { successToast, urlHelper } from "lib/helpers";
 import { WALLET_URL } from "lib/constants/routes.constants";
 import { SortType } from "App";
 
@@ -55,6 +55,7 @@ const useWallet = (): UseWalletReturn => {
       method: HTTP.POST,
       data: { address },
     });
+    successToast("Wallet created successfully");
     getAllWallets();
   };
 
@@ -67,14 +68,17 @@ const useWallet = (): UseWalletReturn => {
       method: HTTP.PATCH,
       data: { ...wallet },
     });
+    successToast("Wallet updated successfully");
     return res.data as WalletEntity;
   };
 
-  const deleteWallet = async (id: number) => {
+  const deleteWallet = async (id: number): Promise<void> => {
+    successToast("Wallet deleted successfully");
     await sendRequest({
       url: urlHelper(WALLET_URL, id),
       method: HTTP.DELETE,
     });
+    getAllWallets();
   };
 
   return {

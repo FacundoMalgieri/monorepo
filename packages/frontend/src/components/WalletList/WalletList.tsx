@@ -10,15 +10,21 @@ type WalletListProps = {
     id: number,
     wallet: Partial<WalletEntity>
   ) => Promise<WalletEntity>;
+  deleteWallet: (id: number) => Promise<void>;
   wallets: WalletEntity[] | undefined;
 };
 
-const WalletList: FC<WalletListProps> = ({ wallets, updateWallet }) => (
+const WalletList: FC<WalletListProps> = ({
+  wallets,
+  updateWallet,
+  deleteWallet,
+}) => (
   <div className={styles.container}>
     {wallets?.map((wallet, index) => (
       <Wallet
         wallet={wallet}
         key={wallet.id}
+        deleteWallet={deleteWallet}
         updateWallet={updateWallet}
         separator={index < wallets.length - 1}
       />

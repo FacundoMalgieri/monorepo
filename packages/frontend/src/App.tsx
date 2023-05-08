@@ -22,6 +22,7 @@ const App: FC = () => {
     getAllWallets,
     createWallet,
     updateWallet,
+    deleteWallet,
   } = useWallet();
 
   useEffect(() => {
@@ -45,7 +46,11 @@ const App: FC = () => {
       <AddWallet createWallet={createWallet} />
       <RadioButtons onSortChange={onSetSortBy} sortBy={sortBy} />
       <Separator />
-      <WalletList wallets={data} updateWallet={updateWallet} />
+      <WalletList
+        wallets={data}
+        updateWallet={updateWallet}
+        deleteWallet={deleteWallet}
+      />
     </div>
   );
 };

@@ -1,15 +1,20 @@
-import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
-import {
-  MdBookmark,
-  MdBookmarkBorder,
-  MdCheck,
-  MdClose,
-  MdEditSquare,
-} from "react-icons/md";
+import React, {
+  ChangeEventHandler,
+  FC,
+  KeyboardEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { MdCheck, MdClose, MdEditSquare, MdRefresh } from "react-icons/md";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoStarOutline, IoStarSharp } from "react-icons/io5";
 
 import Separator from "components/Separator";
-import { WalletEntity } from "lib/constants/types.constants";
+import { RateEntity, WalletEntity } from "lib/constants/types.constants";
 import Select from "components/Select";
+import useRate from "hooks/useRate";
 
 import styles from "./Wallet.module.scss";
 
@@ -20,20 +25,35 @@ type WalletProps = {
     id: number,
     wallet: Partial<WalletEntity>
   ) => Promise<WalletEntity>;
+  deleteWallet: (id: number) => Promise<void>;
 };
 
 const defaultCurrency = "defaultCurrency";
 
 const Wallet: FC<WalletProps> = ({
   updateWallet,
+  deleteWallet,
   wallet: { id, address, eth, favorite, old, usd, eur },
   separator = false,
 }) => {
+  const { updateRate } = useRate();
   const [isFav, setIsFav] = useState(favorite);
   const [isEdit, setIsEdit] = useState(false);
   const [currency, setCurrency] = useState<string>(
     localStorage.getItem(defaultCurrency) || "usd"
   );
+  const isUsd = useMemo(() => currency === "usd", [currency]);
+  const [currentUsd, setCurrentUsd] = useState<number>(usd);
+  const [currentEur, setCurrentEur] = useState<number>(eur);
+  const [currentRate, setCurrentRate] = useState<number>(
+    isUsd ? currentUsd : currentEur
+  );
+  const [newRate, setNewRate] = useState<string>(currentRate.toString());
+
+  useEffect(() => {
+    setCurrentRate(isUsd ? currentUsd : currentEur);
+    setNewRate(String(isUsd ? currentUsd : currentEur));
+  }, [isUsd, currency, currentUsd, currentEur]);
 
   const onMarkAsFavorite = async () => {
     const res = await updateWallet(id, { favorite: !favorite });
@@ -48,35 +68,91 @@ const Wallet: FC<WalletProps> = ({
     localStorage.setItem(defaultCurrency, value);
   };
 
-  const onSetEdit = () => setIsEdit(!isEdit);
+  const onSetEdit = (cancel?: boolean) => {
+    if (isEdit && cancel) {
+      // on cancel leave the currentRate value
+      setNewRate(currentRate.toString());
+    }
 
-  // const onRateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-  // };
+    setIsEdit(!isEdit);
+  };
 
-  const isUsd = useMemo(() => currency === "usd", [currency]);
+  /**
+   * Gets the 3rd party current market rate
+   * @param resetRate
+   */
+  const prepareUpdatePayload = (resetRate = false) => {
+    let newRateNumber = 0; // in the server when 0 is sent, gets coingecko's rate
+    const payload: Partial<RateEntity> = { address };
+
+    if (!resetRate) {
+      newRateNumber = Number(newRate);
+    }
+
+    if (isUsd) {
+      payload.usd = newRateNumber;
+    } else {
+      payload.eur = newRateNumber;
+    }
+
+    return payload;
+  };
+
+  const onConfirmRateUpdate = async (resetRate = false) => {
+    const payload = prepareUpdatePayload(resetRate);
+    const res = await updateRate(payload);
+
+    if (isUsd) {
+      setCurrentUsd(res.usd);
+    } else {
+      setCurrentEur(res.eur);
+    }
+    onSetEdit();
+  };
+
+  const onChangeRate: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const { value } = event.target;
+    const regex = /^(\d{0,10}(\.\d{0,2})?)$/;
+
+    if (regex.test(value)) {
+      setNewRate(value);
+    }
+  };
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    const { key } = event;
+    if (key === "Enter") {
+      onConfirmRateUpdate();
+    }
+    if (key === "Escape") {
+      onSetEdit(true);
+    }
+  };
+
+  const onDeleteWallet = () => {
+    if (window.confirm("Are you sure?")) {
+      deleteWallet(id);
+    }
+  };
+
+  const currencySymbol = useMemo(() => (isUsd ? "$" : "€"), [currency]);
 
   const currentBalanceInFiat = useMemo(
-    () =>
-      isUsd
-        ? `$ ${(usd * eth).toLocaleString()}`
-        : `€ ${(eur * eth).toLocaleString()}`,
-    [currency]
+    () => `${currencySymbol} ${(currentRate * eth).toLocaleString()}`,
+    [currency, currentRate]
   );
 
   const formattedRate = useMemo(
-    () => (isUsd ? `$ ${usd.toLocaleString()}` : `€ ${eur.toLocaleString()}`),
-    [currency]
+    () => `${currencySymbol} ${currentRate.toLocaleString()}`,
+    [currency, currentRate]
   );
 
   const renderFavIcons = useMemo(
     () =>
       isFav ? (
-        <MdBookmarkBorder
-          onClick={onMarkAsFavorite}
-          className={styles.favIcon}
-        />
+        <IoStarSharp onClick={onMarkAsFavorite} className={styles.favIcon} />
       ) : (
-        <MdBookmark onClick={onMarkAsFavorite} className={styles.favIcon} />
+        <IoStarOutline onClick={onMarkAsFavorite} className={styles.favIcon} />
       ),
     [isFav]
   );
@@ -86,32 +162,68 @@ const Wallet: FC<WalletProps> = ({
       isEdit ? (
         <div className={styles.editContainer}>
           <div className={styles.iconsContainer}>
-            <MdClose onClick={onSetEdit} />
-            <MdCheck />
+            <MdClose
+              className={styles.closeIcon}
+              onClick={() => onSetEdit(true)}
+            />
+            <MdRefresh
+              className={styles.refreshIcon}
+              title="Get current market rate from Coingecko 3rd party"
+              onClick={() => onConfirmRateUpdate(true)}
+            />
+            <MdCheck
+              className={styles.checkIcon}
+              onClick={() => onConfirmRateUpdate()}
+            />
           </div>
           <input
             className={styles.rateInput}
             type="text"
-            value={isUsd ? usd : eur}
+            value={newRate}
+            onChange={onChangeRate}
+            onKeyDown={handleKeyPress}
           />
         </div>
       ) : (
         <div className={styles.rateContainer}>
-          <MdEditSquare onClick={onSetEdit} className={styles.editIcon} />
+          <MdEditSquare
+            onClick={() => onSetEdit()}
+            className={styles.editIcon}
+          />
           <p>
             <b>Rate:</b> {formattedRate}
           </p>
         </div>
       ),
-    [isEdit]
+    [isEdit, formattedRate, newRate]
   );
 
   return (
     <div className={styles.container}>
-      {old && <div className={styles.toast}>Wallet is old</div>}
       <div className={styles.address}>
-        <p>{address}</p>
-        {renderFavIcons}
+        <div className={styles.addressIconsContainer}>
+          <RiDeleteBin6Line
+            className={styles.deleteIcon}
+            onClick={onDeleteWallet}
+          />
+          {renderFavIcons}
+        </div>
+        <div className={styles.addressContainer}>
+          {old && (
+            <AiOutlineClockCircle
+              className={styles.oldWallet}
+              title="Wallet is old"
+            />
+          )}
+          {address}
+          <div className={styles.addressIconsContainerInline}>
+            <RiDeleteBin6Line
+              className={styles.deleteIcon}
+              onClick={onDeleteWallet}
+            />
+            {renderFavIcons}
+          </div>
+        </div>
       </div>
       <div className={styles.boxes}>
         <div className={styles.box}>

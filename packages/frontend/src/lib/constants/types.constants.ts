@@ -8,10 +8,9 @@ export interface WalletEntity {
   usd: number;
 }
 
-export type Currency = "usd" | "eur";
-
 export interface RateEntity {
   id: number;
-  eur: Currency;
-  usd: Currency;
+  eur: number;
+  usd: number;
+  address: string;
 }

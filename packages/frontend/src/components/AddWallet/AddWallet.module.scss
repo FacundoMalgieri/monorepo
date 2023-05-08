@@ -47,10 +47,10 @@
 }
 
 .errorInput {
-  border: $borderWidth solid $red;
+  border: $borderWidth solid $darkRed;
   box-shadow: $boxShadowError;
 }
 
 .error {
-  color: $red;
+  color: $darkRed;
 }

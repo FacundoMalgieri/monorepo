@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, useState } from "react";
+import React, { ChangeEventHandler, KeyboardEvent, FC, useState } from "react";
 import classNames from "classnames";
 import { MdSearch } from "react-icons/md";
 
@@ -29,7 +29,7 @@ const AddWallet: FC<AddWalletProps> = ({ createWallet }) => {
     }
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       onCreateWallet();
     }

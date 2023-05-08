@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import NProgress from "nprogress";
-import { toast } from "react-toastify";
 
 import axios from "lib/axios";
+import { errorToast } from "lib/helpers";
 
 interface UseHttpRequestReturn<T> {
   sendRequest: (requestConfig: AxiosRequestConfig) => Promise<AxiosResponse<T>>;
@@ -14,17 +14,6 @@ interface UseHttpRequestReturn<T> {
 const useApi = <T>(): UseHttpRequestReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
-  const notify = (text: string) =>
-    toast.error(text, {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
 
   const sendRequest = async (
     requestConfig: AxiosRequestConfig
@@ -41,9 +30,7 @@ const useApi = <T>(): UseHttpRequestReturn<T> => {
       return response;
     } catch (error) {
       const err = error as AxiosError;
-      err?.response?.status === 500
-        ? notify("Max limit reached, please wait 2 seconds and try again")
-        : notify(err.message);
+      errorToast(err.message);
       setIsLoading(false);
       setError(err.message);
       throw err.message || "An error occurred";

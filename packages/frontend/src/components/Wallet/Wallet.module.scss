@@ -9,29 +9,6 @@
   width: 100%;
 }
 
-.address {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: $borderWidth solid $lightGrey;
-  border-radius: $borderRadius;
-  background-color: $grey;
-  box-sizing: border-box;
-  box-shadow: $boxShadow;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-  letter-spacing: .05rem;
-
-  @media (max-width: $mobile) {
-    padding: .5rem;
-    font-size: .85rem;
-    letter-spacing: unset;
-  }
-}
-
 .boxes {
   display: flex;
   justify-content: center;
@@ -75,30 +52,97 @@
   color: $green
 }
 
-.toast {
+.oldWallet {
+  color: $red;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: .5rem;
+
+  @media (max-width: $mobile) {
+    margin-right: .25rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+
+.address {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  background-color: $lightRed;
-  border: $borderWidth solid $lightBorderRed;
+  justify-content: center;
+  border: $borderWidth solid $lightGrey;
   border-radius: $borderRadius;
+  background-color: $grey;
   box-sizing: border-box;
   box-shadow: $boxShadow;
   width: 100%;
   margin-bottom: 1rem;
   padding: 1rem;
-  color: $burgundy;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: .05rem;
 
   @media (max-width: $mobile) {
-    font-size: .85rem;
     padding: .5rem;
+    font-size: .85rem;
+    letter-spacing: unset;
+  }
+}
+
+.addressContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+
+  @media (max-width: $mobile) {
+    justify-content: center;
+  }
+}
+
+.addressIconsContainer {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: .25rem;
+
+  @media (max-width: $mobile) {
+    display: flex;
+  }
+}
+
+.addressIconsContainerInline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+
+  @media (max-width: $mobile) {
+    display: none;
+  }
+}
+
+.deleteIcon {
+  color: $red;
+  cursor: pointer;
+  width: 1.55rem;
+  height: 1.55rem;
+  margin-right: 1rem;
+
+  @media (max-width: $mobile) {
+    width: 1.05rem;
+    height: 1.05rem;
   }
 }
 
 .favIcon {
   cursor: pointer;
-  margin-left: auto;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  color: $orange;
 
   @media (max-width: $mobile) {
     width: 1.2rem;
@@ -111,6 +155,7 @@
   flex-direction: column;
   height: 100%;
   align-items: flex-end;
+  justify-content: center;
 
   @media (max-width: $mobile) {
     flex-direction: row-reverse;
@@ -126,24 +171,45 @@
   justify-content: flex-end;
   margin-bottom: .5rem;
 
-  svg {
-    width: 1rem;
-    height: 1rem;
-    color: $red;
-    cursor: pointer;
-
-    &:last-child {
-      margin-left: 1.5rem;
-      color: $green;
-    }
-
-    path:nth-child(2) {
-      stroke-width: 2px !important;
-    }
-  }
-
   @media (max-width: $mobile) {
     margin-bottom: 0;
+  }
+}
+
+.closeIcon {
+  color: $darkRed;
+
+  path:nth-child(2) {
+    stroke-width: 2px !important;
+  }
+}
+
+.checkIcon {
+  margin-left: 1rem;
+  color: $green;
+
+  path:nth-child(2) {
+    stroke-width: 2px !important;
+  }
+}
+
+.refreshIcon {
+  margin-left: 1rem;
+  color: $lightBlue;
+
+  path:nth-child(3) {
+    stroke-width: 2px !important;
+  }
+}
+
+.closeIcon, .checkIcon, .refreshIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+
+  @media (max-width: $mobile) {
+    width: 1rem;
+    height: 1rem;
   }
 }
 
@@ -167,12 +233,18 @@
 
   @media (max-width: $mobile) {
     flex-direction: row-reverse;
+    align-items: center;
     width: 100%;
     justify-content: space-between;
   }
 }
 
 .editIcon {
+  cursor: pointer;
   color: $lightBlue !important;
   margin-bottom: .5rem;
+
+  @media (max-width: $mobile) {
+    margin-bottom: 0;
+  }
 }
