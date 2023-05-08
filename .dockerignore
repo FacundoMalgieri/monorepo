@@ -10,5 +10,6 @@
 **/test
 **/.DS_Store
 **/build
+**/docker/
 
 

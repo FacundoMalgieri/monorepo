@@ -8,14 +8,7 @@ export const isValidETHAddress = (address: string): boolean =>
   ethRegex.test(address);
 
 export const sanitizeAddresses = (wallets: Wallet[]): Wallet[] =>
-  wallets
-    .map((wallet) => {
-      if (!isValidETHAddress(wallet.address)) {
-        return undefined;
-      }
-      return wallet;
-    })
-    .filter(Boolean);
+  wallets.filter((wallet) => isValidETHAddress(wallet.address));
 
 export const findAndWeiToEth = (accounts: BalanceResponse[], address) =>
   accounts.length
@@ -39,3 +32,7 @@ export const sortBy = (sort: string): Record<string, SortType> => {
 
 export const getWalletAddresses = (wallets: Wallet[]): string =>
   wallets.map((wallet) => wallet.address).join(',');
+
+// wait 1 sec to avoid reaching max limit of the free API
+export const avoidMaxLimitPerSecond = async (): Promise<void> =>
+  await new Promise((resolve) => setTimeout(resolve, 1000));

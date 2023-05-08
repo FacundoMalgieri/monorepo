@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { getETHBalance } from 'api/etherscan';
 import { RateService } from 'rate/rate.service';
 import {
+  avoidMaxLimitPerSecond,
   findAndWeiToEth,
   getWalletAddresses,
   isValidETHAddress,
@@ -30,10 +31,6 @@ export class WalletService {
     private walletRepository: Repository<Wallet>,
   ) {}
 
-  async avoidMaxLimitPerSecond(): Promise<void> {
-    return await new Promise((resolve) => setTimeout(resolve, 2000)); // wait 2 sec to avoid reaching max limit
-  }
-
   async extendWallets(wallets: Wallet[]): Promise<ExtendedWallet[]> {
     const walletAddresses = getWalletAddresses(wallets);
     const balanceResult = await getETHBalance(walletAddresses);
@@ -56,7 +53,11 @@ export class WalletService {
 
   async findAll(sort: SortType): Promise<ExtendedWallet[]> {
     const wallets = await this.walletRepository.find({ order: sortBy(sort) });
-    await this.avoidMaxLimitPerSecond();
+    if (!wallets.length) {
+      return [];
+    }
+
+    await avoidMaxLimitPerSecond();
     return this.extendWallets(sanitizeAddresses(wallets));
   }
 
