@@ -150,9 +150,17 @@ const Wallet: FC<WalletProps> = ({
   const renderFavIcons = useMemo(
     () =>
       isFav ? (
-        <IoStarSharp onClick={onMarkAsFavorite} className={styles.favIcon} />
+        <IoStarSharp
+          onClick={onMarkAsFavorite}
+          className={styles.favIcon}
+          data-testid="favorite-icon-true"
+        />
       ) : (
-        <IoStarOutline onClick={onMarkAsFavorite} className={styles.favIcon} />
+        <IoStarOutline
+          onClick={onMarkAsFavorite}
+          className={styles.favIcon}
+          data-testid="favorite-icon-false"
+        />
       ),
     [isFav]
   );
@@ -182,6 +190,7 @@ const Wallet: FC<WalletProps> = ({
             value={newRate}
             onChange={onChangeRate}
             onKeyDown={handleKeyPress}
+            data-testid="rate-input"
           />
         </div>
       ) : (
@@ -189,6 +198,7 @@ const Wallet: FC<WalletProps> = ({
           <MdEditSquare
             onClick={() => onSetEdit()}
             className={styles.editIcon}
+            data-testid="edit-icon"
           />
           <p>
             <b>Rate:</b> {formattedRate}
@@ -226,7 +236,7 @@ const Wallet: FC<WalletProps> = ({
         </div>
       </div>
       <div className={styles.boxes}>
-        <div className={styles.box}>
+        <div className={styles.box} data-testid="current-eth-balance">
           <b>{eth.toLocaleString("en-US")} ETH</b>
           {renderEditMode}
         </div>

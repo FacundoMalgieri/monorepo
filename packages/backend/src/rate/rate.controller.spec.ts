@@ -6,7 +6,7 @@ import { RateService } from './rate.service';
 import { Rate } from './rate.entity';
 
 describe('RateController', () => {
-  let controller: RateController;
+  let rateController: RateController;
   let rateService: MockProxy<RateService>;
 
   beforeEach(async () => {
@@ -19,7 +19,7 @@ describe('RateController', () => {
       ],
     }).compile();
 
-    controller = module.get<RateController>(RateController);
+    rateController = module.get<RateController>(RateController);
     rateService = module.get<MockProxy<RateService>>(RateService);
   });
 
@@ -31,7 +31,7 @@ describe('RateController', () => {
 
       jest.spyOn(rateService, 'update').mockResolvedValue(updatedRate);
 
-      const result = await controller.updateRate(mockRate);
+      const result = await rateController.updateRate(mockRate);
 
       expect(rateService.update).toHaveBeenCalledWith(mockRate);
       expect(result).toEqual(updatedRate);

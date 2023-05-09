@@ -3,12 +3,14 @@ To run the project with docker follow this steps:
 * Clone this repository
 * Make sure docker is running
 * `cd monorepo`
+* Create a new `.env.prod` file using `.env.example` both in `packages/frontend` as in `packages/backend`
 * `docker-compose up`
 * Navigate to http://localhost:3000
 
 If you want to run the project locally instead:
 * Clone this repository
 * `cd monorepo`
+* Create a new `.env` file using `.env.example` both in `packages/frontend` as in `packages/backend`
 * `yarn`
 * `yarn start`
 

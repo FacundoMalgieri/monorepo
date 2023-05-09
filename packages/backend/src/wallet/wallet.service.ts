@@ -16,7 +16,7 @@ import {
 import { Wallet } from './wallet.entity';
 import { SortType } from './wallet.controller';
 
-interface ExtendedWallet extends Wallet {
+export interface ExtendedWallet extends Wallet {
   usd: number;
   eur: number;
   old: boolean;
