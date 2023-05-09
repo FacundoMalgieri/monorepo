@@ -12,8 +12,6 @@ services:
       - packages/backend/.env.prod
     depends_on:
       - db
-    volumes:
-      - ./packages/backend/dist:/app/dist
 
   frontend:
     container_name: frontend
